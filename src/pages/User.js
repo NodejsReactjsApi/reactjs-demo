@@ -2,19 +2,52 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import UserForm from '../components/UserForm';
 import UserTable from '../components/UserTable';
-import { apiCall } from '../apicall/apicall';
 import { setUser } from '../actions/userActions';
+import { io } from 'socket.io-client';
 const User = (props) => {
-    useEffect(() => {
-        apiCall("user/get-users").then((result) => {
-          debugger;
-          props.setUser(result.users);
+    const API_URL = process.env.REACT_APP_API_URL;
+
+    const connectWebSocket = () => {
+        const socket = io(API_URL);
+      
+        socket.on('connect', () => {
+          console.log('WebSocket bağlantısı açıldı');
         });
-    }, []);
+      
+        socket.on('message', (data) => {
+          console.log('WebSocket mesajı alındı:', data);
+        });
+      
+        socket.on('response', (data) => {
+          console.log('İstemciden alınan yanıt:', data);
+        });
+
+        socket.on('collectionData', (data) => {
+            console.log('Kullanıcı listesi canlı:', data);
+          });
+      
+        socket.on('realtimeData', (data) => {
+          console.log('Gerçek zamanlı veri alındı:', data);
+        });
+      
+        socket.on('disconnect', () => {
+          console.log('WebSocket bağlantısı kapatıldı');
+        });
+      
+        return socket;
+      };
+      
+      useEffect(() => {
+        const socket = connectWebSocket();
+      
+        // Komponent unmount olduğunda WebSocket bağlantısını kapatın
+        return () => {
+          socket.close();
+        };
+      }, []);
 
     useEffect(() => {
         console.log(props);
-        debugger;
     }, [props.userList]);
 
     return (
