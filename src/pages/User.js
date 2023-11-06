@@ -40,7 +40,6 @@ const User = (props) => {
       useEffect(() => {
         const socket = connectWebSocket();
       
-        // Komponent unmount olduğunda WebSocket bağlantısını kapatın
         return () => {
           socket.close();
         };
