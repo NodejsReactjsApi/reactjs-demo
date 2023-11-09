@@ -27,7 +27,13 @@ const User = (props) => {
           });
       
         socket.on('realtimeData', (data) => {
+        
           console.log('Gerçek zamanlı veri alındı:', data);
+        });
+
+        socket.on('userList', (data) => {
+          props.setUser(data);
+          console.log('kullanıcı listesi', data);
         });
       
         socket.on('disconnect', () => {
@@ -54,7 +60,7 @@ const User = (props) => {
             <UserForm />
             <UserTable />
         </>
-      );
+    );
 }
 
 const mapStateToProps = (state) => ({

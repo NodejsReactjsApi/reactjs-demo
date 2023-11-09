@@ -1,20 +1,11 @@
 import { Table } from "antd";
-import { useState } from "react";
+import { connect } from 'react-redux';
 
-const UserTable = () => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [tableParams, setTableParams] = useState({
-        pagination: {
-          current: 1,
-          pageSize: 10,
-        },
-    });
-
+const UserTable = (props) => {
     const columns = [
         {
             title: 'Name',
-            dataIndex: 'name',
+            dataIndex: 'username',
             width: '20%',
           },
           {
@@ -28,13 +19,15 @@ const UserTable = () => {
     return (
         <Table 
             columns={columns}
-            rowKey={(record) => record.login.uuid}
-            dataSource={data}
-            pagination={tableParams.pagination}
-            loading={loading}
+            rowKey={(record) => record._id}
+            dataSource={props.userList}
             onChange={handleTableChange}
         />
     )
 }
 
-export default UserTable;
+const mapStateToProps = (state) => ({
+  userList: state.users.userList,
+});
+
+export default connect(mapStateToProps)(UserTable);

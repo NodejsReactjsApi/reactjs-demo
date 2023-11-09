@@ -1,4 +1,5 @@
 import { Form, Input, Button } from 'antd';
+import{ handleSaveUser } from "../apicall/apicall.js"
 
 const FormItem = Form.Item;
 
@@ -6,7 +7,8 @@ const UserForm = () => {
     const [form] = Form.useForm();
 
     const submitForm = () => {
-        console.log(form.getFieldsValue());
+        let userData = form.getFieldsValue();
+        handleSaveUser(userData);
     }
 
     return (
